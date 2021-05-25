@@ -1,8 +1,17 @@
+"""
+
+    run the results of an experiment in evaluation mode
+
+"""
+
 import argparse
 
 from core.ExperimentWrapper import ExperimentWrapper
 
 def run(experiment_path):
+    """
+        run the results of an experiment in evaluation mode
+    """
     experiment = ExperimentWrapper(experiment_path)
     experiment.test()
 

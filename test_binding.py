@@ -1,7 +1,16 @@
+"""
+
+    Little script to test the TMForge binding
+
+"""
+
 from random import randint
 from core.MakeTMEnv import MakeTMEnv
 
 def run():
+    """
+        Little script to test the TMForge binding
+    """
     with MakeTMEnv() as tmenv:
         state = tmenv.reset()
         for t in range(100):

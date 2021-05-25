@@ -1,3 +1,9 @@
+"""
+
+    Entry point for TMForge
+
+"""
+
 import argparse
 import os
 import sys

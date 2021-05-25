@@ -71,15 +71,14 @@ class TMEnv:
                 self.controller.reset()
         self.nCp = 0
         self.last_cp_time = time.time()
-        self.state_acquisition_time = time.time()
         self.FPSUpdate()
+        self.state_acquisition_time = time.time()
         return self.getObservation()
 
     def step(self, action):
         if self.done:
             return None
         self.assertIsInRun()
-        action_latency = time.time() - self.state_acquisition_time
         performed_action = action
         if self.manual_override:
             action_override = self.controller.getActionOverride()
@@ -89,6 +88,7 @@ class TMEnv:
                 self.controller.performAction(action)
         else:
             self.controller.performAction(action)
+        action_latency = time.time() - self.state_acquisition_time
 
         if self.wait_hook is not None:
             self.wait_hook()
@@ -110,8 +110,8 @@ class TMEnv:
         if self.done:
             self.controller.releaseEverything()
 
-        self.state_acquisition_time = time.time()
         self.FPSUpdate()
+        self.state_acquisition_time = time.time()
         return state, reward, done, {
             "performed_action": performed_action,
             "is_finished": self.open_planet_bridge.isGameStateFinish(),

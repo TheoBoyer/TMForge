@@ -8,7 +8,7 @@ from package.DQNAgent import DQNAgent
 from core.Telemetry import Telemetry
 from utils.draw import SplittedLayoutWindow
 
-SAVE_EVERY = 100
+EPISODE_SAVE_FREQUENCY = 20
 
 class DQNWrapper:
     def __init__(self, n_actions, hyperparameters, source_file=None):
@@ -81,7 +81,6 @@ class DQNWrapper:
             "duration": time.time() - self.tstart,
             "n_finish": self.n_finish,
             "n_episode": self.n_episode,
-            "total_rewards": self.total_rewards,
             "frames": frames_path,
             "actions": actions_path,
             "rewards": rewards_path,
@@ -95,9 +94,6 @@ class DQNWrapper:
     def update(self):
         if self.game_steps % self.hyperparameters["train_every"] == 0:
             self.agent.train_step(self.frames, self.actions, self.rewards, self.dones)
-        if self.game_steps % SAVE_EVERY == 0:
-            print("Making state backup")
-            self.saveState()
         if not self.ui.draw():
             raise Exception("Graphic mode Interuption")
 
@@ -148,5 +144,9 @@ class DQNWrapper:
 
                 if done:
                     break
+
+            if self.n_episode % EPISODE_SAVE_FREQUENCY == 0:
+                print("Making state backup")
+                self.saveState()
             
             print("Finished ! Obtained {} rewards".format(self.total_rewards))

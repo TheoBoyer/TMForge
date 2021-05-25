@@ -8,6 +8,6 @@
     "target_frequency_update": 1000,
     "initial_epsilon": 0.95,
     "min_epsilon": 0.05,
-    "epsilon_discount_factor": 0.9999,
+    "epsilon_discount_factor": 0.99999,
     "min_buff_size": 3000
 }

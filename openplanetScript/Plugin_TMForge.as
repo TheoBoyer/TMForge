@@ -23,7 +23,7 @@ void SendMessage(const string message) {
             sock.Close();
         }
       } else {
-        //print("Sent data");
+        print("Sent " + message);
       }
   } else {
     //print("Not yet connected");

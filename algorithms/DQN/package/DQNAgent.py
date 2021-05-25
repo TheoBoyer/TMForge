@@ -79,16 +79,16 @@ class DQNAgent:
         state = self.preprocess(state)
         # Predict the estimated Q-value in a numpy array
         qs = self.policy(state).squeeze(0).detach().cpu().numpy()
-        # Save current the Q-value
-        self.last_q_value = np.max(qs)
         # Take the best action
         action = np.argmax(qs)
-        del qs, state
+        del state
 
         # Take the best action
         if random() < self.epsilon:
             action = randint(0, self.n_actions - 1)
-        
+
+        # Save current the Q-value
+        self.last_q_value = qs[action]
         # Update epsilon following the exponential schedule
         self.epsilon = self.hyperparameters["min_epsilon"] + (self.epsilon - self.hyperparameters["min_epsilon"]) * self.hyperparameters["epsilon_discount_factor"]
         return action

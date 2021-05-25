@@ -37,9 +37,9 @@ The DQN implementation's goal is to demonstrate how to use the tool. No hyperpar
 ### Technical Performances
 The DQN implementation has been tested only on one poor hardware configuration. To give n idea of the performances, here are the metrics for the default configuration:
 
-| CPU               | GPU               | Training Steps/s | Training steps     | Time               |
-| ----------------- | ----------------- | ---------------- | ------------------ | ------------------ |
-| AMD FX-4300       | NVIDIA GTX 750 TI | 3.942            | 57816              | ~4h                |
+| CPU               | GPU               | Training Steps/s | Training steps     | Time               | Episodes           |
+| ----------------- | ----------------- | ---------------- | ------------------ | ------------------ | ------------------ |
+| AMD FX-4300       | NVIDIA GTX 750 TI | 3.942            | 57816              | 4h 4min 27sec      | 300                |
 
 Feel free to complete this table with your experiments
 

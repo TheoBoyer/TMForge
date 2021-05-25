@@ -16,7 +16,7 @@ The experiment oriented approach allow you to easily save the metrics of your al
 - Club access on [Trackmania 2020](https://www.ubisoft.com/fr-fr/game/trackmania/trackmania)
 - [pywin32](https://pypi.org/project/pywin32/)
 - [OpenCV-Python](https://pypi.org/project/opencv-python/) and [numpy](https://numpy.org/)
-- (Demos only) [Pytorch](https://pytorch.org/get-started/locally/)
+- (Only for the demo) [Pytorch](https://pytorch.org/get-started/locally/)
 
 ## Installation
 Once all the requirements are satisfied, you can clone the repository. The only thing to do is move the scipt `openplanetScript/Plugin_TMForge.as` into your openplanet script folder (usually `C:/Users/[Username]/Openplanet4/Scripts/`).

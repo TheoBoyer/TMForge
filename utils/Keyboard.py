@@ -1,3 +1,10 @@
+"""
+
+    Set of function usefull to manage keyboard. 
+    Mostly Ctrl+C, Ctrl+V from https://github.com/Sentdex/pygta5
+
+"""
+
 # direct inputs
 # source to this solution and code:
 # http://stackoverflow.com/questions/14489013/simulate-python-keypresses-for-controlling-a-game
@@ -9,6 +16,7 @@ import win32api
 import win32con
 import time
 
+# Usefull virtual keycodes
 SUPPR = 0xD3
 ENTER = 0x1C
 ARROWUP = 0xC8
@@ -17,6 +25,7 @@ ARROWLEFT = 0xCB
 ARROWRIGHT = 0xCD
 
 
+# Physical keycodes
 PHYSICALKEYCODES = {
     "UP": win32con.VK_UP,
     "DOWN": win32con.VK_DOWN,
@@ -67,6 +76,9 @@ class Input(ctypes.Structure):
 # Actuals Functions
 
 def PushKey(hexKeyCode):
+    """
+        Push a key using the virtual keycode
+    """
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
     ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008, 0, ctypes.pointer(extra) )
@@ -74,18 +86,28 @@ def PushKey(hexKeyCode):
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
 def ReleaseKey(hexKeyCode):
+    """
+        Release a key using the virtual keycode
+    """
     extra = ctypes.c_ulong(0)
     ii_ = Input_I()
     ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
     x = Input( ctypes.c_ulong(1), ii_ )
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
 
+
 def pressKey(key, duration=0.2):
+    """
+        Push and release a key for a given amount of time
+    """
     PushKey(key)
     time.sleep(duration)
     ReleaseKey(key)
 
 def getPhysicalKeysPressed():
+    """
+        Return a list of the virtual keycodes of the keys that are physicaly pressed
+    """
     keys = []
     for key_name, key_code in PHYSICALKEYCODES.items():
         if win32api.GetAsyncKeyState(key_code):

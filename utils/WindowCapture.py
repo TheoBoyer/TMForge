@@ -1,3 +1,9 @@
+"""
+
+    Class that handles window capture
+    Mostly Ctrl+C, Ctrl+V from from https://github.com/learncodebygaming/opencv_tutorials/blob/master/004_window_capture/windowcapture.py
+"""
+
 import numpy as np
 import cv2
 import win32gui, win32ui, win32con
@@ -12,6 +18,9 @@ user32.SetProcessDPIAware() # optional, makes functions return real pixel number
 full_screen_rect = (0, 0, user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
 
 def is_full_screen():
+    """
+        Try to determine if the foreground window is in fullscreen.
+    """
     try:
         hWnd = user32.GetForegroundWindow()
         rect = win32gui.GetWindowRect(hWnd)
@@ -20,7 +29,9 @@ def is_full_screen():
         return False
 
 class WindowCapture:
-
+    """
+        Class that handles window capture.
+    """
     # properties
     w = 0
     h = 0
@@ -34,6 +45,10 @@ class WindowCapture:
 
     # constructor
     def __init__(self, window_name):
+        """
+            params:
+                window_name: name of the window to capture
+        """
         # find the handle for the window we want to capture
         self.window_name = window_name
         self.hwnd = win32gui.FindWindow(None, window_name)
@@ -48,6 +63,9 @@ class WindowCapture:
         self.update_dimensions()
 
     def update_dimensions(self):
+        """
+            Internally keep track of the dimensions of the window
+        """
         # get the window size
         window_rect = win32gui.GetWindowRect(self.hwnd)
         isFullScreen =  win32gui.GetWindowRect(self.hwnd) == full_screen_rect
@@ -75,6 +93,9 @@ class WindowCapture:
                 
 
     def get_screenshot(self):
+        """
+            Return a screenshot of the window and the timestamp it was taken at
+        """
         self.update_dimensions()
         # get the window image data
         wDC = win32gui.GetWindowDC(self.hwnd)
@@ -115,5 +136,8 @@ class WindowCapture:
             pass
 
     def get_window_rect(self):
+        """
+            return the position and dimensions of the window
+        """
         x, y, x2, y2 = win32gui.GetWindowRect(self.hwnd)
         return x, y, x2 - x, y2 - y

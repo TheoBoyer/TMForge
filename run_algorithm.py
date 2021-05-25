@@ -1,8 +1,18 @@
+"""
+
+    run an algorithm in training mode
+
+"""
+
 import argparse
 
 from core.AlgorithmWrapper import AlgorithmWrapper
 
 def run(algo):
+    """
+        run the given algorithm in training mode
+    """
+
     algo = AlgorithmWrapper(algo)
     algo.runAlgorithm()
 

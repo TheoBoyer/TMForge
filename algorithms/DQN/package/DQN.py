@@ -1,3 +1,9 @@
+"""
+
+    Pytorch model for the DQN algorithm. Almost Ctrl-C, Ctrl-V from: https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
+    The complete algorithm is described here: https://arxiv.org/pdf/1312.5602.pdf
+
+"""
 import torch
 import torch.nn as nn
 import torch.nn.functional as Func
@@ -11,7 +17,9 @@ device = torch.device(dev)
 import config
 
 class DQN(nn.Module):
-
+    """
+        Pytorch model for the DQN algorithm.
+    """
     def __init__(self, h, w, outputs):
         super(DQN, self).__init__()
         self.conv1 = nn.Conv2d(config.CAPTURE_N_FRAMES, 16, kernel_size=5, stride=2)

@@ -1,0 +1,4 @@
+{
+    "importantParameter": "some value",
+    "anotherOne": "Here you can write all you hyperparameters to call your algorithm with"
+}

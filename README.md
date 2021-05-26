@@ -24,6 +24,7 @@ From there you can open the game and go to the map you want to train your agent 
 - To test if the binding is correctly working, run the command `python tmforge.py test_binding`
 - To train an algorithm, run the command `python tmforge.py run_algorithm {algorithm folder}`
 - To evaluate an experiment, run the command`python tmforge.py test_experiment {experiment folder}`
+Now you can complete the binding by going in-game and reloading the Openplanet TMForge plugin (`Open planet bar -> Developer -> TMForge`)
 
 ## Developing your own algorithm:
 To make your own implementation of reinforcement learning on Trackmania you can use two levels of abstraction.
@@ -43,3 +44,9 @@ The DQN implementation has been tested only on one poor hardware configuration. 
 
 Feel free to complete this table with your experiments
 
+### Banchmark
+The DQN algorithm is being tested on the TMForge official benchmark map. It's simple enough to be finished by an agent but mix several surfaces and in-game blocks.
+<img src="https://i.imgur.com/QofS9Mz.png" /><br>
+
+*The benchmark map is available in the TMForge club*
+ On this benchmark, the best known run to date's details are available on [Kaggle](https://www.kaggle.com/wolfy73/trackmania-dqn-results-analysis)

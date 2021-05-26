@@ -25,6 +25,9 @@ From there you can open the game and go to the map you want to train your agent 
 - To train an algorithm, run the command `python tmforge.py run_algorithm {algorithm folder}`
 - To evaluate an experiment, run the command`python tmforge.py test_experiment {experiment folder}`
 Now you can complete the binding by going in-game and reloading the Openplanet TMForge plugin (`Open planet bar -> Developer -> TMForge`)
+<p align="center">
+  <img src="https://i.imgur.com/KMQhCGF.png" /><br>
+</p>
 
 ## Developing your own algorithm:
 To make your own implementation of reinforcement learning on Trackmania you can use two levels of abstraction.
@@ -33,7 +36,13 @@ To make your own implementation of reinforcement learning on Trackmania you can 
 To learn more about the possibilities please have a look at the DQN implementation that you will find in the "algorithms" folder
 
 ## DQN Implementation
-The DQN implementation's goal is to demonstrate how to use the tool. No hyperparameter set has been found to perform well on the game yet for this algorithm. 
+The DQN implementation's goal is to demonstrate how to use the tool. The default hyperparameters are still unstable and needs to be improved
+
+### Recomendations
+If you want to run this algorithm please take in consideration the following:
+- The backup files storing the replay buffer can be quite large (~1Go for 10k "buffer_size")
+- Aim for stability over performance especially when you choose the "ENV_MAX_FPS" setting. The training easily colapses on long runs.
+- Run trackmania with minimal graphics to use your GPU on the training.
 
 ### Technical Performances
 The DQN implementation has been tested only on one poor hardware configuration. To give n idea of the performances, here are the metrics for the default configuration:
@@ -46,7 +55,9 @@ Feel free to complete this table with your experiments
 
 ### Banchmark
 The DQN algorithm is being tested on the TMForge official benchmark map. It's simple enough to be finished by an agent but mix several surfaces and in-game blocks.
-<img src="https://i.imgur.com/QofS9Mz.png" /><br>
+<p align="center">
+  <img src="https://i.imgur.com/QofS9Mz.png" /><br>
+</p>
 
 *The benchmark map is available in the TMForge club*
  On this benchmark, the best known run to date's details are available on [Kaggle](https://www.kaggle.com/wolfy73/trackmania-dqn-results-analysis)

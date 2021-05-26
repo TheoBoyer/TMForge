@@ -47,6 +47,12 @@ class DQNAgent:
         self.epsilon = hyperparameters["initial_epsilon"]
         self.last_q_value = 0
 
+    def evalMode(self):
+        """
+            Switch the agent into evaluation mode
+        """
+        self.epsilon = 0.02
+
     def getTrainSteps(self):
         """
             Return the number of training steps performed

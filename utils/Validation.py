@@ -48,3 +48,13 @@ def assertFunctionExist(script_path, function_name=None):
         if func is None:
             raise ValueError("Unable to load {} function from {}".format(function_name, script_path))
     return func
+
+def load_config(experiment_folder):
+    """
+        Load the configuration file of a given experiment
+    """
+    experiment_folder = os.path.join(experiment_folder, "config.py")
+    spec = importlib.util.spec_from_file_location("config", experiment_folder)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module

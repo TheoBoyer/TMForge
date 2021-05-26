@@ -97,7 +97,7 @@ class TMEnv:
         """
         # Checkpoint number
         newCp = self.open_planet_bridge.getState()["CP"]
-        #print(newCp, self.nCp)
+        #print(self.nCp, self.open_planet_bridge.getState())
         if newCp > self.nCp:
             # We crossed a new CP
             self.nCp = newCp

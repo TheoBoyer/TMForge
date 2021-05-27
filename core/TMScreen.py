@@ -55,6 +55,8 @@ class TMScreen:
             screen, time = self.tm_capture.get_screenshot()
             # Resize it
             screen = cv2.resize(screen, (config.CAPTURE_IMG_WIDTH, config.CAPTURE_IMG_HEIGHT))
+            if config.CAPTURE_GREYSCALE:
+                screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
             # stores it in the buffer
             self.tm_frame_buffer.append(screen)
             self.tm_frame_time_buffer.append(time)

@@ -57,6 +57,7 @@ class Telemetry:
         """
             Return the internal state for backup
         """
+        print("Saving telemetry")
         return {
             "data_path": self.dump_file_path
         }

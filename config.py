@@ -4,7 +4,8 @@
 # Dimension of the images captured
 CAPTURE_IMG_WIDTH = 128
 CAPTURE_IMG_HEIGHT = 77
-CAPTURE_N_FRAMES = 3
+CAPTURE_N_FRAMES = 2
+CAPTURE_GREYSCALE = True
 ###
 # OpenplanetBridgeSettings
 ###
@@ -14,15 +15,15 @@ OP_CHRONO_TO_WAIT_BEFORE_PLAYING = -200
 # Env settings
 ###
 # FPS goal to reach. IMPORTANT: For training stability you should set this value under the true performances of your hardware to keep the FPS as constant as possible 
-ENV_MAX_FPS = 5
+ENV_MAX_FPS = 7
 # Reward to attribute when a cp is crossed
 ENV_CP_REWARD = 1
 # Reward to attribute when the finish line is crossed
 ENV_FINISH_REWARD = 1
 # Reward to attribute when nothing special happens
-ENV_DEFAULT_REWARD = -0.01
+ENV_DEFAULT_REWARD = -0.008
 # Max time allowed for the agent between two CPS before considering it's stuck
-ENV_PLAYING_TIMEOUT = 30
+ENV_PLAYING_TIMEOUT = 35
 ###
 # Draw settings
 ###

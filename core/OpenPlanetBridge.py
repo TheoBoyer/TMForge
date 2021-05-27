@@ -52,15 +52,18 @@ class OpenPlanetBridge:
                     if not data:
                         break
                     # This is handling the case where the data is accumulating without a read operation. In that case we use the last parsable message
-                    idx = data.rfind("}")
-                    data = data[:idx+1]
-                    idx = data.rfind("{")
-                    data = data[idx:]
-                    try:
-                        # Update the internal state
-                        self._state = json.loads(data)
-                    except:
-                        print("Couldn't decode packet")
+                    idx2 = data.rfind("}")
+                    data = data[:idx2+1]
+                    idx1 = data.rfind("{")
+                    data = data[idx1:]
+                    if idx1 >=0 and idx2 > 0:
+                        try:
+                            # Update the internal state
+                            self._state = json.loads(data)
+                        except:
+                            print("Couldn't decode packet: ", data)
+                    else:
+                        print("weird packet going on")
             except socket.timeout:
                 pass
             except KeyboardInterrupt:

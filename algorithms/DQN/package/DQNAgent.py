@@ -17,6 +17,7 @@ else:
 device = torch.device(dev)
 
 import config
+import time
 import numpy as np
 # Here you can also import from the package folder
 from package.DQN import DQN
@@ -103,9 +104,7 @@ class DQNAgent:
         """
             Prepare the raw states for a DQN forward pass
         """
-        # Turn into a grayscale
-        x = x.mean(-1)
-        # Turn Normalize the values
+        # Normalize the values
         x = torch.tensor(x, device=device, dtype=torch.float) / 255
         # Assert that the batch dimension is respected
         if len(x.shape) < 4:
@@ -116,6 +115,7 @@ class DQNAgent:
         """
             Perform a training step using the given replay buffer
         """
+        tstart = time.time()
         # We want to train only if we have enough data and respecting the "min_buff_size" hyperparameter
         if len(states) < max(self.hyperparameters["min_buff_size"], self.hyperparameters["batch_size"]):
             return

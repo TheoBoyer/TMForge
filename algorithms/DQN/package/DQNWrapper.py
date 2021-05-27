@@ -18,7 +18,7 @@ from core.Telemetry import Telemetry
 # And also utility functions
 from utils.draw import SplittedLayoutWindow
 
-EPISODE_SAVE_FREQUENCY = 20
+EPISODE_SAVE_FREQUENCY = 10
 
 class DQNWrapper:
     """
@@ -97,17 +97,28 @@ class DQNWrapper:
         """
             Return a dictionnary representing the state of the algorithm. Used for backups
         """
+        tstart = time.time()
         frames_path = "frames_buffer.npy"
         actions_path = "actions_buffer.npy"
         rewards_path = "rewards_buffer.npy"
         dones_path = "dones_buffer.npy"
-        np.save(frames_path, np.array(self.frames))
+
+        buffer_tstart = time.time()
+        np.save(frames_path, np.stack(self.frames, axis=0))
         np.save(actions_path, np.array(self.actions))
         np.save(rewards_path, np.array(self.rewards))
         np.save(dones_path, np.array(self.dones))
-        return {
-            "agent": self.agent.getState(),
-            "telemetry": self.telemetry.getState(),
+        buffer_saving_time = time.time() - buffer_tstart
+
+        agent_tstart = time.time()
+        agent_state = self.agent.getState()
+        agent_saving_time = time.time() - agent_tstart
+
+        telemetry_state = self.telemetry.getState()
+
+        state = {
+            "agent": agent_state,
+            "telemetry": telemetry_state,
             "game_steps": self.game_steps,
             "duration": time.time() - self.tstart,
             "n_finish": self.n_finish,
@@ -117,6 +128,15 @@ class DQNWrapper:
             "rewards": rewards_path,
             "dones": dones_path,
         }
+        """
+        with open("debug.txt", 'a') as f:
+            f.write("saved:\n")
+            f.write("Buffer: {:.4f} (buffer len={})\n".format(buffer_saving_time, len(self.frames)))
+            f.write("Agent: {:.4f}\n".format(agent_saving_time))
+            f.write("Total: {:.4f}\n".format(time.time() - tstart))
+            f.write('\n')
+        """
+        return state
     
     def saveState(self):
         """
@@ -125,6 +145,7 @@ class DQNWrapper:
         """
         with open('state_backup.json', 'w') as f:
             json.dump(self.getState(), f)
+        print("Backup complete !")
 
     def update(self):
         """
@@ -140,6 +161,9 @@ class DQNWrapper:
         """
             Run the DQN algorithm.
         """
+        with open("debug.txt", 'w') as f:
+            f.write("Debug:\n")
+
         # Save the time at start to keep track of the duration of execution
         self.tstart = time.time()
         # Attach the update function to the hook provided by the environment. This function will be called during the waiting phase

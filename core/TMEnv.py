@@ -93,7 +93,7 @@ class TMEnv:
             raise Exception("Trackmania not detected")
         frames, _ = resp
         if self.include_time_left:
-            time_left =  np.ones((1,) + frames.shape[1:]) * time_left
+            time_left =  (np.ones((1,) + frames.shape[1:]) * int(round(time_left * 255))).astype(np.uint8)
             frames = np.concatenate((time_left, frames), axis=0)
 
         return frames

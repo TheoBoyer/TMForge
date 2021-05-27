@@ -13,7 +13,7 @@ from core.MakeTMEnv import MakeTMEnv
 
 def run(hyperparameters):
     # Creation of the environment
-    with MakeTMEnv() as tmenv:
+    with MakeTMEnv(include_time_left=True) as tmenv:
         dqnWrapper = DQNWrapper(tmenv.controller.ACTION_SPACE, hyperparameters)
         # Run the algorithm
         dqnWrapper.run(tmenv)

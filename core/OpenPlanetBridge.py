@@ -56,8 +56,11 @@ class OpenPlanetBridge:
                     data = data[:idx+1]
                     idx = data.rfind("{")
                     data = data[idx:]
-                    # Update the internal state
-                    self._state = json.loads(data)
+                    try:
+                        # Update the internal state
+                        self._state = json.loads(data)
+                    except:
+                        print("Couldn't decode packet")
             except socket.timeout:
                 pass
             except KeyboardInterrupt:

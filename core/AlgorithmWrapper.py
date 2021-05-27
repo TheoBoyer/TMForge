@@ -71,12 +71,12 @@ class AlgorithmWrapper:
             Load the user functions (run from train.py and play from play.py) or throw an error if it can't find them
         """
         self.train = assertFunctionExist(
-            os.path.join(self.experiment_path, "train.py"),
+            "./train.py",
             "run"
         )
 
         self.play = assertFunctionExist(
-            os.path.join(self.experiment_path, "play.py"),
+            "./play.py",
             "play"
         )
 
@@ -102,9 +102,9 @@ class AlgorithmWrapper:
         copyfile("./config.py", os.path.join(self.experiment_path, "config.py"))
         # Add the experiment folder to the import paths
         sys.path.append(self.experiment_path)
-        # Load the user's functions
-        self.loadRequiredFunctions()
         # Change current directory to the experiment's
         os.chdir(self.experiment_path) 
+        # Load the user's functions
+        self.loadRequiredFunctions()
         # Call the user's train function
         self.train(self.hyperparameters)

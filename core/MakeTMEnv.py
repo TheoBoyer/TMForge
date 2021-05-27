@@ -25,12 +25,18 @@ class MakeTMEnv:
             with MakeTMEnv() as tmenv:
                     ...
     """
-    def __init__(self, controller=TMKeyboard(), blocking_mode=True, manual_override=True):
+    def __init__(self,
+            controller=TMKeyboard(),
+            blocking_mode=True,
+            manual_override=True,
+            include_time_left=True
+        ):
         """
             params:
                 controller (TMDevice): Trackmania controller e.g keyboard / controller / joystick
                 blocking_mode (boolean): Wether the "reset" method of tmenv will block your code. Strongly advise you to let this to True
                 manual_override (boolean): Wether the user should be able to override the agent's actions when using a physicall device.
+                include_time_left (boolean): Wether the states should contain time left before timeout
         """
         # In game data bridge
         self.open_planet_bridge = OpenPlanetBridge()
@@ -40,6 +46,7 @@ class MakeTMEnv:
         self.controller = controller
         self.blocking_mode = blocking_mode
         self.manual_override = manual_override
+        self.include_time_left = include_time_left
 
         self.bound = False
         self.emergency_stop = False
@@ -64,6 +71,7 @@ class MakeTMEnv:
             print("Waiting for you to run trackmania and load/reload the TMForge script on Openplanet")
             while not self.emergency_stop and not self.isObservable():
                 time.sleep(0.1)
+            print("Script detected, starting the environment")
         self.bound = True
 
         return True
@@ -92,7 +100,8 @@ class MakeTMEnv:
             self.tm_screen,
             self.controller,
             self.blocking_mode,
-            self.manual_override
+            self.manual_override,
+            self.include_time_left
         )
 
     def __exit__(self,  exc_type, exc_value, tb):

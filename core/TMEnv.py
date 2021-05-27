@@ -10,6 +10,7 @@
 
 import time
 import config
+import numpy as np
 
 class TMEnv:
     """
@@ -24,7 +25,8 @@ class TMEnv:
             tm_screen,
             controller,
             blocking_mode,
-            manual_override
+            manual_override,
+            include_time_left
         ):
         """
             params:
@@ -41,6 +43,7 @@ class TMEnv:
         self.controller = controller
         self.blocking_mode = blocking_mode
         self.manual_override = manual_override
+        self.include_time_left = include_time_left
         # Internal variables
         self.nCp = 0
         self.last_cp_time = None
@@ -79,7 +82,7 @@ class TMEnv:
         self.assertIsInRun()
         return self.open_planet_bridge.getTime()
 
-    def getObservation(self):
+    def getObservation(self, time_left=1):
         """
             Return the current state. It's a numpy array containing frames. The format is specified in config.py
         """
@@ -89,6 +92,10 @@ class TMEnv:
         if resp is None:
             raise Exception("Trackmania not detected")
         frames, _ = resp
+        if self.include_time_left:
+            time_left =  np.ones((1,) + frames.shape[1:]) * time_left
+            frames = np.concatenate((time_left, frames), axis=0)
+
         return frames
 
     def calculateReward(self):
@@ -180,11 +187,15 @@ class TMEnv:
             time.sleep(1 / config.ENV_MAX_FPS - dt)
 
         # Calculate the returned informations
-        state = self.getObservation()
         reward = self.calculateReward()
         done = self.open_planet_bridge.isGameStateFinish()
         if config.ENV_PLAYING_TIMEOUT > 0:
-            done = done or time.time() - self.last_cp_time > config.ENV_PLAYING_TIMEOUT
+            time_before_timeout = config.ENV_PLAYING_TIMEOUT - (time.time() - self.last_cp_time)
+            done = done or time_before_timeout <= 0
+            prop_before_timeout = time_before_timeout / config.ENV_PLAYING_TIMEOUT
+        else:
+            prop_before_timeout = 1
+        state = self.getObservation(prop_before_timeout)
             
         self.done = done
 
@@ -197,7 +208,8 @@ class TMEnv:
         return state, reward, done, {
             "performed_action": performed_action,
             "is_finished": self.open_planet_bridge.isGameStateFinish(),
-            "action_latency": action_latency
+            "action_latency": action_latency,
+            "prop_before_timeout": prop_before_timeout
         }
 
     def assertIsInRun(self):

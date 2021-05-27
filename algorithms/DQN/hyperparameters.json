@@ -1,13 +1,13 @@
 {
     "n_episodes": 10000,
     "train_every": 1,
-    "learning_rate": 0.0025,
-    "buffer_size": 20000,
+    "learning_rate": 0.00125,
+    "buffer_size": 40000,
     "batch_size": 32,
     "reward_discount_factor": 0.99,
     "target_frequency_update": 2000,
     "initial_epsilon": 0.95,
     "min_epsilon": 0.05,
     "epsilon_discount_factor": 0.9999,
-    "min_buff_size": 3000
+    "min_buff_size": 5000
 }

@@ -15,7 +15,7 @@ The experiment-oriented approach allows you to easily save the metrics of your a
 - [Openplanet](https://openplanet.nl/)
 - Club access on [Trackmania 2020](https://www.ubisoft.com/fr-fr/game/trackmania/trackmania)
 - [pywin32](https://pypi.org/project/pywin32/)
-- [OpenCV-Python](https://pypi.org/project/opencv-python/) and [NumPy](https://numpy.org/)
+- [OpenCV-Python](https://pypi.org/project/opencv-python/), [Pandas](https://pandas.pydata.org/) and [NumPy](https://numpy.org/)
 - (Only for the demo) [Pytorch](https://pytorch.org/get-started/locally/)
 
 ## Installation
@@ -24,7 +24,8 @@ From there you can open the game and go to the map you want to train your agent 
 - To test if the binding is correctly working, run the command `python tmforge.py test_binding`
 - To train an algorithm, run the command `python tmforge.py run_algorithm {algorithm folder}`
 - To evaluate an experiment, run the command`python tmforge.py test_experiment {experiment folder}`
-Now you can complete the binding by going in-game and reloading the Openplanet TMForge plugin (`Open planet bar -> Developer -> TMForge`)
+- To resume an experiment, run the command`python tmforge.py resume_experiment {experiment folder}`
+Now you can complete the binding by going in-game and reloading the Openplanet TMForge plugin (`Open planet bar -> Developer -> Load/Reload plugin -> TMForge`)
 <p align="center">
   <img src="https://i.imgur.com/KMQhCGF.png" /><br>
 </p>
@@ -33,7 +34,11 @@ Now you can complete the binding by going in-game and reloading the Openplanet T
 To make your own implementation of reinforcement learning on Trackmania you can use two levels of abstraction.
 1. The gym-like Trackmania environment API.
 2. The experiment oriented API
-To learn more about the possibilities please have a look at the DQN implementation that you will find in the "algorithms" folder
+For the later you should create your algorithm folder in the "algorithms" folder. You will have to create two files:
+1. train.py: A file that should contain a "run" function that can both starts and resume the training of your algorithm.
+2. play.py: A file containing a play method called to evaluate your agent.
+If you want to use additional scripts, you should place them in the "package" folder of your algorithm.
+To learn more about the possibilities please have a look at the "Tutorial" and the "DQN" implementation that you will find in the "algorithms" folder.
 
 ## DQN Implementation
 The DQN implementation's goal is to demonstrate how to use the tool. The default hyperparameters are still unstable and need to be improved
@@ -42,16 +47,16 @@ The DQN implementation's goal is to demonstrate how to use the tool. The default
 If you want to run this algorithm please take into consideration the following:
 - The backup files storing the replay buffer can be quite large (~1Go for 10k "buffer_size")
 - Aim for stability over performance especially when you choose the "ENV_MAX_FPS" setting. The training easily collapses on long runs.
-- Run Trackmania with minimal graphics to use your GPU on the training.
+- Run Trackmania with minimal graphics to use your GPU for the training.
 
 ### Technical Performances
-The DQN implementation has been tested only on one poor hardware configuration. To give n idea of the performances, here are the metrics for the default configuration:
+The DQN implementation has been tested only on one poor hardware configuration. To give an idea of the performances, here are the obtained metrics for the default configuration:
 
 | CPU               | GPU               | Training Steps/s | Training steps     | Time               | Episodes           |
 | ----------------- | ----------------- | ---------------- | ------------------ | ------------------ | ------------------ |
 | AMD FX-4300       | NVIDIA GTX 750 TI | 3.942            | 57816              | 4h 4min 27sec      | 300                |
 
-Feel free to complete this table with your experiments
+Feel free to create a pull request to complete this table with your experiments.
 
 ### Benchmark
 The DQN algorithm is being tested on the TMForge official benchmark map. It's simple enough to be finished by an agent but mix several surfaces and in-game blocks.
@@ -60,4 +65,4 @@ The DQN algorithm is being tested on the TMForge official benchmark map. It's si
 </p>
 
 *The benchmark map is available in the TMForge club*
- On this benchmark, the best-known run to date's details are available on [Kaggle](https://www.kaggle.com/wolfy73/trackmania-dqn-results-analysis)
+ For this benchmark, you can find the results of a bunch of runs on [Kaggle](https://www.kaggle.com/wolfy73/trackmania-dqn-results-analysis)

@@ -15,7 +15,7 @@ The experiment-oriented approach allows you to easily save the metrics of your a
 - [Openplanet](https://openplanet.nl/)
 - Club access on [Trackmania 2020](https://www.ubisoft.com/fr-fr/game/trackmania/trackmania)
 - [pywin32](https://pypi.org/project/pywin32/)
-- [OpenCV-Python](https://pypi.org/project/opencv-python/), [Pandas](https://pandas.pydata.org/) and [NumPy](https://numpy.org/)
+- [OpenCV-Python](https://pypi.org/project/opencv-python/), [Pandas](https://pandas.pydata.org/), and [NumPy](https://numpy.org/)
 - (Only for the demo) [Pytorch](https://pytorch.org/get-started/locally/)
 
 ## Installation
@@ -31,13 +31,13 @@ Now you can complete the binding by going in-game and reloading the Openplanet T
 </p>
 
 ## Developing your own algorithm:
-To make your own implementation of reinforcement learning on Trackmania you can use two levels of abstraction.
+To make your implementation of reinforcement learning on Trackmania you can use two levels of abstraction.
 1. The gym-like Trackmania environment API.
-2. The experiment oriented API
-For the later you should create your algorithm folder in the "algorithms" folder. You will have to create two files:
-1. train.py: A file that should contain a "run" function that can both starts and resume the training of your algorithm.
+2. The experiment-oriented API
+For the latter, you should create your algorithm folder in the "algorithms" folder. You will have to create two files:
+1. train.py: A file containing a "run" function that can both start and resume the training of your algorithm.
 2. play.py: A file containing a play method called to evaluate your agent.
-If you want to use additional scripts, you should place them in the "package" folder of your algorithm.
+If you want to use additional scripts, you should place them in your algorithm's "package" folder.
 To learn more about the possibilities please have a look at the "Tutorial" and the "DQN" implementation that you will find in the "algorithms" folder.
 
 ## DQN Implementation

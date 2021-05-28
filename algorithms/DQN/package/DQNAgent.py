@@ -19,10 +19,19 @@ device = torch.device(dev)
 import config
 import time
 import numpy as np
+import os
 # Here you can also import from the package folder
 from package.DQN import DQN
 from copy import deepcopy
 from random import random, randint
+
+def weights_init(m):
+    classname = m.__class__.__name__
+    if classname.find('Conv') != -1:
+        torch.nn.init.normal_(m.weight, 0.0, 0.02)
+    elif classname.find('BatchNorm') != -1:
+        torch.nn.init.normal_(m.weight, 1.0, 0.02)
+        torch.nn.init.zeros_(m.bias)
 
 
 class DQNAgent:
@@ -36,12 +45,14 @@ class DQNAgent:
         # Create a new model or load if a source file is provided
         if source_file is None:
             self.policy = DQN(config.CAPTURE_IMG_HEIGHT, config.CAPTURE_IMG_WIDTH, n_actions).to(device)
+            self.policy.apply(weights_init)
         else:
             self.policy = torch.load(source_file).to(device)
         # Target network
         self.target = DQN(config.CAPTURE_IMG_HEIGHT, config.CAPTURE_IMG_WIDTH, n_actions).to(device)
         self.target.load_state_dict(self.policy.state_dict())
         self.target.eval()
+        torch.save(deepcopy(self.target).cpu(), self.model_save_path + "/target.pt")
         # Use of RMSprop. I've read that RMSprop can be more stable than Adam in non-stationary optimization problems
         self.optimizer = torch.optim.RMSprop(self.policy.parameters(), lr=hyperparameters["learning_rate"])
         self.n_steps = 0
@@ -52,7 +63,7 @@ class DQNAgent:
         """
             Switch the agent into evaluation mode
         """
-        self.epsilon = 0.02
+        self.epsilon = 0.001
 
     def getTrainSteps(self):
         """
@@ -180,14 +191,31 @@ class DQNAgent:
         # Memory management
         del a, r, q_t, q_t_prime, q_t_estim
 
+    def setState(self, state):
+        self.policy = torch.load(state["policy_model"]).to(device)
+        # Target network
+        if os.path.isfile(state["target_model"]):
+            self.target = torch.load(state["target_model"]).to(device)
+        else:
+            self.target = DQN(config.CAPTURE_IMG_HEIGHT, config.CAPTURE_IMG_WIDTH, self.n_actions).to(device)
+            self.target.load_state_dict(self.policy.state_dict())
+        self.target.eval()
+        # Use of RMSprop. I've read that RMSprop can be more stable than Adam in non-stationary optimization problems
+        self.optimizer = torch.optim.RMSprop(self.policy.parameters(), lr=self.hyperparameters["learning_rate"])
+        self.optimizer.load_state_dict(torch.load(state["optimizer"]))
+        self.n_steps = state["n_steps"]
+        self.epsilon = state["epsilon"]
+
     def getState(self):
         """
             Return the internal state of the wrapper for backup 
         """
-        torch.save(deepcopy(self.policy).cpu(), self.model_save_path + "/policy.pt")
+        torch.save(deepcopy(self.policy).cpu(), os.path.join(self.model_save_path, "policy.pt"))
+        torch.save(self.optimizer.state_dict(), os.path.join(self.model_save_path, "optimizer.pt"))
         return {
-            "policy_model": self.model_save_path + "/policy.pt",
-            "target_model": self.model_save_path + "/target.pt",
+            "policy_model": os.path.join(self.model_save_path, "policy.pt"),
+            "target_model": os.path.join(self.model_save_path, "target.pt"),
+            "optimizer": os.path.join(self.model_save_path, "optimizer.pt"),
             "n_steps": self.n_steps,
             "epsilon": self.epsilon
         }

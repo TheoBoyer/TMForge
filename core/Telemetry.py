@@ -6,6 +6,9 @@
 """
 
 import numpy as np
+import pandas as pd
+from shutil import copyfile
+import os
 
 class Telemetry:
     """
@@ -28,8 +31,9 @@ class Telemetry:
         """
             Create a csv file to dump the data in
         """
-        with open(self.dump_file_path, 'w') as f:
-            f.write(",".join(self.metrics) + "\n")
+        if not os.path.isfile(self.dump_file_path):
+            with open(self.dump_file_path, 'w') as f:
+                f.write(",".join(self.metrics) + "\n")
 
     def append(self, new_row):
         """
@@ -53,11 +57,25 @@ class Telemetry:
         """
         return self._data[column]
 
+    def setState(self, state):
+        self.dump_file_path = state["dump_file_path"]
+        copyfile(state["backup_path"], self.dump_file_path)
+        data = pd.read_csv(self.dump_file_path)
+
+        self.metrics = list(data.columns)
+        self._data = {}
+        for k in self.metrics:
+            col = data[k].values
+            self._data[k] = col[col == col].tolist()
+
+
     def getState(self):
         """
             Return the internal state for backup
         """
         print("Saving telemetry")
+        copyfile(self.dump_file_path, "./metrics_backup.csv")
         return {
-            "data_path": self.dump_file_path
+            "dump_file_path": self.dump_file_path,
+            "backup_path": "./metrics_backup.csv"
         }

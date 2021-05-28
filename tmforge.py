@@ -10,7 +10,7 @@ import sys
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='TMForge environment for reinforcement learning')
-    modes = ['run_algorithm', 'test_experiment', 'test_binding']
+    modes = ['run_algorithm', 'test_experiment', 'test_binding', 'resume_experiment']
     parser.add_argument(
         'mode',
         choices=modes,

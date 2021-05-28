@@ -176,6 +176,14 @@ def getKeyboardTypeDrawer(params):
         return window
     return draw
 
+def approximate(source, n):
+    N = len(source)
+    f_size = N // n
+    data = np.convolve(source, np.ones(f_size) / f_size, mode='valid')
+    x = np.linspace(0, len(data) - 1, num=n)
+    x_descrete = np.round(x).astype(np.int)
+    return data[x_descrete]
+
 def getGraphicLastTypeDrawer(params):
     """
         Return a drawer that will plot values
@@ -192,8 +200,7 @@ def getGraphicLastTypeDrawer(params):
             data = data[-maxlen:]
         elif approx_type == 'moving_average':
             if len(data) > maxlen:
-                f = len(data) - maxlen + 1
-                data = np.convolve(data, np.ones(f) / f, mode='valid')
+                data = approximate(data, maxlen)
         else:
             raise ValueError("Unkonw approximation method: " + str(approx_type))
         window = np.zeros((config.DRAW_LAYOUT_HEIGHT, config.DRAW_LAYOUT_WIDTH, 3), dtype=np.uint8)

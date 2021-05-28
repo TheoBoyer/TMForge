@@ -92,6 +92,12 @@ class ExperimentWrapper:
             ".",
             error_message="{} folder doesn't exists".format(self.experiment_path)
         )
+
+        self.train_script_path = assertPathExists(
+            self.experiment_path,
+            "train.py",
+            "{} is an invalid algorithm path because train.py script wasn't found".format(self.experiment_path)
+        )
         
         self.play_script_path = assertPathExists(
             self.experiment_path,
@@ -114,6 +120,11 @@ class ExperimentWrapper:
             Load the user functions (play from play.py) or throw an error if it can't find them
         """
         sys.path.append(self.experiment_path)
+        self.train = assertFunctionExist(
+            self.train_script_path,
+            "run"
+        )
+
         self.play = assertFunctionExist(
             self.play_script_path,
             "play"
@@ -173,6 +184,13 @@ class ExperimentWrapper:
 
             raise ValueError("It could cause undetermined behaviour. If you still want to evaluate this experiment, modify the current config.py or the one of your experiment folder")
 
+    def resume(self):
+        """
+            resume an experiment by calling the user's train function
+        """
+        # Call the user's train function
+        self.train(self.hyperparameters)
+    
     def update(self):
         """
             Here are the function to perform each step that takes time. It's wrapped in this function so it can be called during the waiting phase of the environment

@@ -1,6 +1,6 @@
 """
 
-    run the results of an experiment in evaluation mode
+    Resume the training of an experiment
 
 """
 
@@ -10,16 +10,16 @@ from core.ExperimentWrapper import ExperimentWrapper
 
 def run(experiment_path):
     """
-        run the results of an experiment in evaluation mode
+        Resume the training of an experiment
     """
     experiment = ExperimentWrapper(experiment_path)
-    experiment.test()
+    experiment.resume()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Wrapper to test a given experiment')
+    parser = argparse.ArgumentParser(description='Wrapper to continue a given experiment')
     parser.add_argument(
         'experiment',
-        help='Path to the folder of the experiment you want to test'
+        help='Path to the folder of the experiment you want to resume'
     )
 
     args = parser.parse_args()

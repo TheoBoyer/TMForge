@@ -9,6 +9,7 @@ import numpy as np
 import config
 import time
 import json
+import os
 
 from collections import deque
 # Here you can also import from the package folder
@@ -18,7 +19,7 @@ from core.Telemetry import Telemetry
 # And also utility functions
 from utils.draw import SplittedLayoutWindow
 
-EPISODE_SAVE_FREQUENCY = 10
+EPISODE_SAVE_FREQUENCY = 50
 
 class DQNWrapper:
     """
@@ -29,6 +30,7 @@ class DQNWrapper:
         self.agent = DQNAgent(n_actions, hyperparameters)
         self.game_steps = 0
         self.tstart = time.time()
+        self.initial_duration = 0
         self.n_finish = 0
         self.n_episode = 0
         # Replay buffer
@@ -93,6 +95,27 @@ class DQNWrapper:
         # The (3, 2) window will display the epsiode rewards obtained during training with a moving average smoothing
         self.ui.bind(11, "Episode Reward", 'graphic', {"maxlen": 30, "approx_type": 'moving_average'})
 
+    def backupExists(self):
+        return os.path.isfile('./actions_buffer.npy')
+
+    def loadBackup(self):
+        with open('./state_backup.json') as f:
+            state = json.load(f)
+        
+        self.agent.setState(state['agent'])
+        self.telemetry.setState(state['telemetry'])
+
+        self.game_steps = state["game_steps"]
+        self.initial_duration = state["duration"]
+        self.n_finish = state["n_finish"]
+        self.n_episode = state["n_episode"]
+
+        # Replay buffer
+        self.frames = deque(np.load(state["frames"]), maxlen=self.hyperparameters["buffer_size"])
+        self.actions = deque(np.load(state["actions"]), maxlen=self.hyperparameters["buffer_size"])
+        self.rewards = deque(np.load(state["rewards"]), maxlen=self.hyperparameters["buffer_size"])
+        self.dones = deque(np.load(state["dones"]), maxlen=self.hyperparameters["buffer_size"])
+
     def getState(self):
         """
             Return a dictionnary representing the state of the algorithm. Used for backups
@@ -120,7 +143,7 @@ class DQNWrapper:
             "agent": agent_state,
             "telemetry": telemetry_state,
             "game_steps": self.game_steps,
-            "duration": time.time() - self.tstart,
+            "duration": time.time() - self.tstart + self.initial_duration,
             "n_finish": self.n_finish,
             "n_episode": self.n_episode,
             "frames": frames_path,
@@ -128,14 +151,7 @@ class DQNWrapper:
             "rewards": rewards_path,
             "dones": dones_path,
         }
-        """
-        with open("debug.txt", 'a') as f:
-            f.write("saved:\n")
-            f.write("Buffer: {:.4f} (buffer len={})\n".format(buffer_saving_time, len(self.frames)))
-            f.write("Agent: {:.4f}\n".format(agent_saving_time))
-            f.write("Total: {:.4f}\n".format(time.time() - tstart))
-            f.write('\n')
-        """
+        
         return state
     
     def saveState(self):
@@ -169,7 +185,7 @@ class DQNWrapper:
         # Attach the update function to the hook provided by the environment. This function will be called during the waiting phase
         tmenv.attachToWaitHook(self.update)
         # Episodes loop
-        for i in range(self.hyperparameters["n_episodes"]):
+        for i in range(self.n_episode, self.hyperparameters["n_episodes"]):
             print("Starting new episode")
             # Reset the environment. Warning: Blocking call
             state = tmenv.reset()
@@ -197,7 +213,7 @@ class DQNWrapper:
                 self.total_rewards += reward
                 # Update the telemetry with the current values
                 self.telemetry.append({
-                    "Duration": time.time() - self.tstart,
+                    "Duration": time.time() - self.tstart + self.initial_duration,
                     "FPS": tmenv.getFPS(),
                     "Action Latency": info["action_latency"],
                     "Episode": self.n_episode,
